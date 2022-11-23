@@ -1,0 +1,50 @@
+#+title: Org-roam-anki
+#+author: Connor Clark
+
+* Table of Contents
+
+- [[*Introduction]]
+- [[*Roadmap]]
+- [[*Dependencies]]
+- [[*Usage]]
+- [[*Configuration]]
+
+* Introduction
+
+Org-roam-anki is an emacs package that allows the user to export notes taken in org-roam to the flashcard application Anki without excessive formatting requirements that would subtract from the natural note-taking process.
+
+The goal of org-roam-anki is to allow users to take notes in org-roam as they normally would, and then create flashcards from those notes by running a single command. Of course, some formatting requirements are needed, as this package is not able to read the user's mind (yet). However, these requirements are designed to be as unobtrusive as possible, and customizable to fit a variety of workflows. It is expected that users will be following the typical zettlekasten note-taking process that org-roam encourages, as the focused, single-topic nature of such notes makes them easier to extract information from.
+
+* Roadmap
+
+- [-] Create a working export process
+- [ ] Strip formatting marks from flashcards
+- [ ] Allow customizable cloze indicators
+- [ ] Allow exporting entire databases
+- [ ] Deprecate anki-editor dependency
+
+* Dependencies
+
+- Emacs v28.8
+- Org-roam v2.2.2
+- Anki-editor v0.3.3
+
+The above version requirements are not necessarily strict, though they are the only versions tested and verified to work. The dependencies of each dependency are also obviously needed. Notably, this includes Anki and AnkiConnect. Instructions on how to get this setup working should be available on the [[https://github.com/louietan/anki-editor][anki-editor github page]].
+
+* Usage
+
+Anki has two main types of notes -- standard and cloze. Standard cards function like traditional flashcards, with a term on the front and information about that term on the back. Cloze cards, on the other hand, only have one side. It shows some information with certain terms deleted, and the user is asked to recall those missing terms. Org-roam-anki allows for the creation of both types of card.
+
+Standard cards are made when a headline with the trigger tag matches one defined in the variable ~org-roam-anki-standard-headings~. More information about this is detailed in the [[*Configuration][configuration section]]. By default, these are ="Definition"=, ="Meaning"=, and ="Translation"=. In this case, the parent headline (or node title if none is available) are used as the front, and the content under the matching headline is used as the back. Take for example, the following org-mode document:
+
+#+begin_src org
+,* Emacs
+,** Definition
+,- The best text editor
+#+end_src org
+
+In this case, the front of the card will be "Emacs" and the back half of the card will be "The best text editor".
+
+* Configuration
+
+Section content
