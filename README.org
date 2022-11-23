@@ -1,13 +1,15 @@
 #+title: Org-roam-anki
 #+author: Connor Clark
 
+Flashcard generator for org-roam
+
 * Table of Contents
 
-- [[*Introduction]]
-- [[*Roadmap]]
-- [[*Dependencies]]
-- [[*Usage]]
-- [[*Configuration]]
+- [[*Introduction][Introduction]]
+- [[*Roadmap][Roadmap]]
+- [[*Dependencies][Dependencies]]
+- [[*Usage][Usage]]
+- [[*Configuration][Configuration]]
 
 * Introduction
 
@@ -35,12 +37,12 @@ The above version requirements are not necessarily strict, though they are the o
 
 Anki has two main types of notes -- standard and cloze. Standard cards function like traditional flashcards, with a term on the front and information about that term on the back. Cloze cards, on the other hand, only have one side. It shows some information with certain terms deleted, and the user is asked to recall those missing terms. Org-roam-anki allows for the creation of both types of card.
 
-Standard cards are made when a headline with the trigger tag matches one defined in the variable ~org-roam-anki-standard-headings~. More information about this is detailed in the [[*Configuration][configuration section]]. By default, these are ="Definition"=, ="Meaning"=, and ="Translation"=. In this case, the parent headline (or node title if none is available) are used as the front, and the content under the matching headline is used as the back. Take for example, the following org-mode document:
+Standard cards are made when a headline with the trigger tag matches one defined in the variable ~org-roam-anki-standard-headings~. More information about this is detailed in the [[*Configuration][configuration section]]. By default, these are "Definition", "Meaning", and "Translation". In this case, the parent headline (or node title if none is available) are used as the front, and the content under the matching headline is used as the back. Take for example, the following org-mode document:
 
 #+begin_src org
 ,* Emacs
 ,** Definition
-,- The best text editor
+- The best text editor
 #+end_src org
 
 In this case, the front of the card will be "Emacs" and the back half of the card will be "The best text editor".
