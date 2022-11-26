@@ -1,6 +1,8 @@
 #+title: Org-roam-anki
 #+author: Connor Clark
 
+#+html:<a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/badge/made-for-emacs-blueviolet"></a>
+
 Flashcard generator for org-roam
 
 * Table of Contents
@@ -37,15 +39,26 @@ The above version requirements are not necessarily strict, though they are the o
 
 Anki has two main types of notes -- standard and cloze. Standard cards function like traditional flashcards, with a term on the front and information about that term on the back. Cloze cards, on the other hand, only have one side. It shows some information with certain terms deleted, and the user is asked to recall those missing terms. Org-roam-anki allows for the creation of both types of card.
 
-Standard cards are made when a headline with the trigger tag matches one defined in the variable ~org-roam-anki-standard-headings~. More information about this is detailed in the [[*Configuration][configuration section]]. By default, these are "Definition", "Meaning", and "Translation". In this case, the parent headline (or node title if none is available) are used as the front, and the content under the matching headline is used as the back. Take for example, the following org-mode document:
+Standard cards are made when a headline with the trigger tag matches one defined in the variable ~org-roam-anki-standard-headings~. More information about this is detailed in the [[*Configuration][configuration section]]. By default, these are "Definition", "Meaning", and "Translation". In this case, the parent headline (or node title if none is available) is used as the front, and each paragraph object under the matching headline is used as the back. Take for example, the following org-mode document:
 
 #+begin_src org
 ,* Emacs
-,** Definition
+,** Definition :anki:
 - The best text editor
 #+end_src org
 
 In this case, the front of the card will be "Emacs" and the back half of the card will be "The best text editor".
+
+Cloze cards are made when a headline with the trigger tag containes a paragraph object that has verbatim text. This is made by surrounding terms with equals signs. The paragraph will be transferred as the card content with the verbatim terms set as the cloze deletions and the matching headline as optional context. For example, the following org-mode document:
+
+#+begin_src org
+,* Other Text Editors :anki:
+Emacs competes with other text editors such as =vim= and =nano=.
+#+end_src org
+
+In this case, the card content will be "Emacs competes with other text editors such as {cloze 1} and {cloze 2}."
+
+Users can run ~org-roam-anki-export-heading~ to export the current heading and all subheadings as anki flashcards and ~org-roam-anki-export-buffer~ to export all headings in the current buffer as anki flashcards (all of this given, of course, that the heading includes the trigger tag).
 
 * Configuration
 
