@@ -1,17 +1,19 @@
 #+title: Org-roam-anki
 #+author: Connor Clark
 
-#+html:<a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/badge/made for-emacs-blueviolet"></a>
+#+html:<p align="center"><a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/badge/made for-emacs-blueviolet"></a></p><hr>
 
+#+html:<div align="center">
 Flashcard generator for org-roam
+#+html:</div>
 
 * Table of Contents
 
-- [[*Introduction][Introduction]]
-- [[*Roadmap][Roadmap]]
-- [[*Dependencies][Dependencies]]
-- [[*Usage][Usage]]
-- [[*Configuration][Configuration]]
+- [[#introduction][Introduction]]
+- [[#roadmap][Roadmap]]
+- [[#dependencies][Dependencies]]
+- [[#usage][Usage]]
+- [[#configuration][Configuration]]
 
 * Introduction
 
