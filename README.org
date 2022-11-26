@@ -67,6 +67,7 @@ Users can run ~org-roam-anki-export-heading~ to export the current heading and a
 The following table outlines the variables provided for customizing org-roam-anki, their default values, and a short description of what each variable does.
 
 | Name                            | Default Value                           | Descpription                                                                     |
+|---------------------------------+-----------------------------------------+----------------------------------------------------------------------------------|
 | org-roam-anki-standard-model    | "Basic (and reversed card)"             | Model to use when exporting standard anki cards                                  |
 | org-roam-anki-cloze-model       | "Cloze"                                 | Model to use when exporting cloze anki cards                                     |
 | org-roam-anki-decks             | '()                                     | List of deck names to attempt to match with tags in org-roam                     |
