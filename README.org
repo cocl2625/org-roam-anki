@@ -64,4 +64,16 @@ Users can run ~org-roam-anki-export-heading~ to export the current heading and a
 
 * Configuration
 
-Section content
+The following table outlines the variables provided for customizing org-roam-anki, their default values, and a short description of what each variable does.
+
+| Name                            | Default Value                           | Descpription                                                                     |
+| org-roam-anki-standard-model    | "Basic (and reversed card)"             | Model to use when exporting standard anki cards                                  |
+| org-roam-anki-cloze-model       | "Cloze"                                 | Model to use when exporting cloze anki cards                                     |
+| org-roam-anki-decks             | '()                                     | List of deck names to attempt to match with tags in org-roam                     |
+| org-roam-anki-fallback-deck     | "Default"                               | Deck to use if no matches are found in org-roam-anki-decks                       |
+| org-roam-anki-trigger-tag       | "anki"                                  | Tag to trigger anki export                                                       |
+| org-roam-anki-mask-tag          | "anki-mask"                             | Tag to mask anki trigger tag (needed due to tag inheritance)                     |
+| org-roam-anki-export-extra-tags | t                                       | Whether to export additional org tags as anki tags                               |
+| org-roam-anki-include-tags      | '()                                     | List of tags to include when exporting to anki -- empty list means include all   |
+| org-roam-anki-exclude-tags      | '()                                     | List of tags to exclude when exporting to anki -- empty list means exclude none  |
+| org-roam-anki-standard-headings | '("Definition" "Meaning" "Translation") | List of tags to exclude when exporting to anki -- empty list means exclude none" |
