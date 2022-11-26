@@ -46,7 +46,7 @@
 
 (defcustom org-roam-anki-fallback-deck
   "Default"
-  "Deck to use if no matches area found in org-roam-anki-decks"
+  "Deck to use if no matches are found in org-roam-anki-decks"
   :type 'string
   :group 'org-roam-anki)
 
