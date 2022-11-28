@@ -131,7 +131,8 @@
                      (member element lineage))
                  (cond ((member heading org-roam-anki-standard-headings)
                         (push (cons (org-roam-node-title node)
-                                    (org-element-interpret-data paragraph))
+                                    (substring-no-properties
+                                     (org-element-interpret-data paragraph)))
                               cardlist)))))))
       cardlist))
 
