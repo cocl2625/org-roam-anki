@@ -114,7 +114,9 @@
                        'edited-taglist))))))
 
 (defun org-roam-anki--get-possible-pairs (element node)
-  "Backend function for preparing to export org-roam notes. It will operate on the provided element or any sub-elements. If element is nil it will operate on the entire current buffer."
+  "Backend function for preparing to export org-roam notes. It will operate on the
+provided element or any sub-elements. If element is nil it will operate on the entire
+current buffer."
   (let ((cardlist '()))
       (org-element-map (org-element-parse-buffer) 'paragraph
         (lambda (paragraph)
