@@ -113,7 +113,7 @@
                          (not (member tag org-roam-anki-include-tags))))
                        'edited-taglist))))))
 
-(defun org-roam-anki--get-possible-pairs (node &optional element)
+(defun org-roam-anki--get-card-info (node &optional element)
   "Backend function for preparing to export org-roam notes. It will operate on the
 entire node and all sub-elements unless a specific element is provided, in which case
 it will operate on that element and all sub-elements"
@@ -142,12 +142,12 @@ it will operate on that element and all sub-elements"
 (defun org-roam-anki-export-heading ()
   "Export current heading and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-possible-pairs (org-roam-node-at-point) (org-element-at-point)))
+  (org-roam-anki--get-card-info (org-roam-node-at-point) (org-element-at-point)))
 
 (defun org-roam-anki-export-buffer ()
   "Export current buffer and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-possible-pairs (org-roam-node-at-point)))
+  (org-roam-anki--get-card-info (org-roam-node-at-point)))
 
 (provide 'org-roam-anki)
 
