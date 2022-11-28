@@ -113,38 +113,37 @@
                          (not (member tag org-roam-anki-include-tags))))
                        'edited-taglist))))))
 
-(defun org-roam-anki--get-nearest-headline (element)
-  "Returns title string of the most granular headline containing element"
-  (org-element-property :title
-    (seq-find (lambda (ancestor) (equal (car ancestor) 'headline))
-              (org-element-lineage element))))
-
-(defun org-roam-anki--export-element (element)
-  "Backend function for preparing and exporting org-roam notes. It will operate on the provided element or any sub-elements. If element is nil it will operate on the entire current buffer."
-  (org-element-map (org-element-parse-buffer) 'paragraph
-    (lambda (paragraph)
-      (let ((parent (org-element-property :parent paragraph)))
-        (and (or (equal element nil)
-                 (equal element paragraph)
-                 (member element (org-element-lineage paragraph)))
-             (equal (org-element-type parent) 'section)
-             (member org-roam-anki-trigger-tag (org-get-tags parent))
-             (org-element-interpret-data paragraph))))))
-
-; WIP
-(let ((parsetree (org-element-parse-buffer)))
-  (org-element-map parsetree 'paragraph
-    (lambda (paragraph))))
+(defun org-roam-anki--get-possible-pairs (element node)
+  "Backend function for preparing to export org-roam notes. It will operate on the provided element or any sub-elements. If element is nil it will operate on the entire current buffer."
+  (let ((cardlist '()))
+      (org-element-map (org-element-parse-buffer) 'paragraph
+        (lambda (paragraph)
+          (let* ((lineage (org-element-lineage paragraph))
+                 (heading (org-element-property
+                           :raw-value
+                           (seq-find (lambda (ancestor) (equal (car ancestor) 'headline))
+                                     lineage)))
+                 (tags (org-get-tags paragraph)))
+            (and (member org-roam-anki-trigger-tag tags)
+                 (not (member org-roam-anki-mask-tag tags))
+                 (or (equal element nil)
+                     (equal element paragraph)
+                     (member element lineage))
+                 (cond ((member heading org-roam-anki-standard-headings)
+                        (push (cons (org-roam-node-title node)
+                                    (org-element-interpret-data paragraph))
+                              cardlist)))))))
+      cardlist))
 
 (defun org-roam-anki-export-heading ()
   "Export current heading and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--export-element (org-element-at-point)))
+  (org-roam-anki--get-possible-pairs (org-element-at-point) (org-roam-node-at-point)))
 
 (defun org-roam-anki-export-buffer ()
   "Export current buffer and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--export-element nil))
+  (org-roam-anki--get-possible-pairs nil (org-roam-node-at-point)))
 
 (provide 'org-roam-anki)
 
