@@ -113,40 +113,41 @@
                          (not (member tag org-roam-anki-include-tags))))
                        'edited-taglist))))))
 
-(defun org-roam-anki--get-possible-pairs (element node)
+(defun org-roam-anki--get-possible-pairs (node &optional element)
   "Backend function for preparing to export org-roam notes. It will operate on the
-provided element or any sub-elements. If element is nil it will operate on the entire
-current buffer."
+entire node and all sub-elements unless a specific element is provided, in which case
+it will operate on that element and all sub-elements"
   (let ((cardlist '()))
       (org-element-map (org-element-parse-buffer) 'paragraph
-        (lambda (paragraph)
-          (let* ((lineage (org-element-lineage paragraph))
+        (lambda (content)
+          (let* ((lineage (org-element-lineage content))
                  (heading (org-element-property
                            :raw-value
                            (seq-find (lambda (ancestor) (equal (car ancestor) 'headline))
                                      lineage)))
-                 (tags (org-get-tags paragraph)))
+                 (tags (org-get-tags content)))
             (and (member org-roam-anki-trigger-tag tags)
                  (not (member org-roam-anki-mask-tag tags))
                  (or (equal element nil)
-                     (equal element paragraph)
+                     (equal element content)
                      (member element lineage))
                  (cond ((member heading org-roam-anki-standard-headings)
-                        (push (cons (org-roam-node-title node)
-                                    (substring-no-properties
-                                     (org-element-interpret-data paragraph)))
+                        (push `((type . "Standard")
+                                (topic . ,(org-roam-node-title node))
+                                (content . ,(substring-no-properties
+                                             (org-element-interpret-data content))))
                               cardlist)))))))
       cardlist))
 
 (defun org-roam-anki-export-heading ()
   "Export current heading and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-possible-pairs (org-element-at-point) (org-roam-node-at-point)))
+  (org-roam-anki--get-possible-pairs (org-roam-node-at-point) (org-element-at-point)))
 
 (defun org-roam-anki-export-buffer ()
   "Export current buffer and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-possible-pairs nil (org-roam-node-at-point)))
+  (org-roam-anki--get-possible-pairs (org-roam-node-at-point)))
 
 (provide 'org-roam-anki)
 
