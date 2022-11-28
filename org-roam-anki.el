@@ -86,7 +86,7 @@
   :type '(repeat string)
   :group 'org-roam-anki)
 
-; TODO add org-roam-anki-cloze-object
+; TODO Add org-roam-anki-cloze-object
 
 (defun org-roam-anki--get-matching-deck (element)
   "Returns first matching deck in element's taglist"
@@ -113,6 +113,11 @@
                          (not (member tag org-roam-anki-include-tags))))
                        'edited-taglist))))))
 
+;TODO Expand this function
+(defun org-roam-anki--clean-text (text)
+  "Removes text properties and formatting marks"
+  (substring-no-properties text))
+
 (defun org-roam-anki--get-card-info (node &optional element)
   "Backend function for preparing to export org-roam notes. It will operate on the
 entire node and all sub-elements unless a specific element is provided, in which case
@@ -134,7 +139,7 @@ it will operate on that element and all sub-elements"
                  (cond ((member heading org-roam-anki-standard-headings)
                         (push `((type . "Standard")
                                 (topic . ,(org-roam-node-title node))
-                                (content . ,(substring-no-properties
+                                (content . ,(org-roam-anki--clean-text
                                              (org-element-interpret-data content))))
                               cardlist)))))))
       cardlist))
