@@ -88,10 +88,13 @@
 
 ; TODO Add org-roam-anki-cloze-object
 
-; TODO Expand this function
 (defun org-roam-anki--clean-text (text)
-  "Removes text properties and formatting marks"
+  "Removes text properties and leading/trailing whitespace"
   (string-trim (substring-no-properties text)))
+
+(defun org-roam-anki--format-text (text)
+  "Converts org formatting to html formatting"
+  (org-export-string-as text 'html t))
 
 (defun org-roam-anki--get-deck (element)
   "Returns first matching deck in element's taglist"
@@ -140,8 +143,9 @@ it will operate on that element and all sub-elements"
                  (cond ((member heading org-roam-anki-standard-headings)
                         (push `((type . "Standard")
                                 (topic . ,(org-roam-node-title node))
-                                (content . ,(org-roam-anki--clean-text
-                                             (org-element-interpret-data content)))
+                                (content . ,(org-roam-anki--format-text
+                                             (org-roam-anki--clean-text
+                                              (org-element-interpret-data content))))
                                 (deck . ,(org-roam-anki--get-deck content))
                                 (model . ,org-roam-anki-standard-model)
                                 (taglist . ,(org-roam-anki--get-taglist content)))
