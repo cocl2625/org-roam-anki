@@ -88,37 +88,36 @@
 
 ; TODO Add org-roam-anki-cloze-object
 
-(defun org-roam-anki--get-matching-deck (element)
-  "Returns first matching deck in element's taglist"
-  (cond (seq-find
-         (lambda (tag)
-           (member tag org-roam-anki-decks))
-         (org-get-tags element))
-        (t org-roam-anki-fallback-deck)))
-
-(defun org-roam-anki--get-export-taglist (element)
-  "Returns taglist of element, minus extras"
-  (cond ((equal org-roam-anki-export-extra-tags nil) nil)
-        (t (let ((edited-taglist
-                  (seq-remove
-                   (lambda (tag)
-                     (or (equal org-roam-anki-trigger-tag)
-                         (equal org-roam-anki-mask-tag)
-                         (member tag org-roam-anki-decks)
-                         (member tag org-roam-anki-exclude-tags)))
-                  (org-get-tags element))))
-             (cond ((equal org-roam-anki-include-tags '()) edited-taglist)
-                   (t (seq-remove
-                       (lambda (tag)
-                         (not (member tag org-roam-anki-include-tags))))
-                       'edited-taglist))))))
-
-;TODO Expand this function
+; TODO Expand this function
 (defun org-roam-anki--clean-text (text)
   "Removes text properties and formatting marks"
-  (substring-no-properties text))
+  (string-trim (substring-no-properties text)))
 
-(defun org-roam-anki--get-card-info (node &optional element)
+(defun org-roam-anki--get-deck (element)
+  "Returns first matching deck in element's taglist"
+  (or (seq-find
+       (lambda (tag)
+         (member tag org-roam-anki-decks))
+       (org-get-tags element))
+      org-roam-anki-fallback-deck))
+
+(defun org-roam-anki--get-taglist (element)
+  "Returns taglist of element, minus extras"
+  (cond ((equal org-roam-anki-export-extra-tags nil) '())
+        (t (let ((taglist '()))
+             (seq-do
+              (lambda (tag)
+                (or (equal tag org-roam-anki-trigger-tag)
+                    (equal tag org-roam-anki-mask-tag)
+                    (member tag org-roam-anki-decks)
+                    (member tag org-roam-anki-exclude-tags)
+                    (not (or (equal org-roam-anki-include-tags '())
+                             (member tag )))
+                    (push (org-roam-anki--clean-text tag) taglist)))
+              (org-get-tags element))
+             taglist))))
+
+(defun org-roam-anki--get-cardlist (node &optional element)
   "Backend function for preparing to export org-roam notes. It will operate on the
 entire node and all sub-elements unless a specific element is provided, in which case
 it will operate on that element and all sub-elements"
@@ -128,8 +127,10 @@ it will operate on that element and all sub-elements"
           (let* ((lineage (org-element-lineage content))
                  (heading (org-element-property
                            :raw-value
-                           (seq-find (lambda (ancestor) (equal (car ancestor) 'headline))
-                                     lineage)))
+                           (seq-find
+                            (lambda (ancestor)
+                              (equal (car ancestor) 'headline))
+                            lineage)))
                  (tags (org-get-tags content)))
             (and (member org-roam-anki-trigger-tag tags)
                  (not (member org-roam-anki-mask-tag tags))
@@ -140,24 +141,38 @@ it will operate on that element and all sub-elements"
                         (push `((type . "Standard")
                                 (topic . ,(org-roam-node-title node))
                                 (content . ,(org-roam-anki--clean-text
-                                             (org-element-interpret-data content))))
-                              cardlist)))))))
+                                             (org-element-interpret-data content)))
+                                (deck . ,(org-roam-anki--get-deck content))
+                                (model . ,org-roam-anki-standard-model)
+                                (taglist . ,(org-roam-anki--get-taglist content)))
+                              cardlist))
+                       (t (print "Cloze cards are not yet supported")))))))
       cardlist))
+
+; TODO Make this function return different values based on success/failure
+(defun org-roam-anki--export-cardlist (cardlist)
+  (seq-do
+   (lambda (card)
+     (anki-editor--anki-connect-invoke "addNote"
+       `((note . ((deckName . ,(alist-get 'deck card))
+                  (modelName . ,(alist-get 'model card))
+                  (fields . ((Front . ,(alist-get 'topic card))
+                             (Back . ,(alist-get 'content card))))
+                  (tags . ,(alist-get 'taglist card)))))))
+   cardlist))
 
 (defun org-roam-anki-export-heading ()
   "Export current heading and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-card-info (org-roam-node-at-point) (org-element-at-point)))
+  (org-roam-anki--export-cardlist
+   (org-roam-anki--get-cardlist
+    (org-roam-node-at-point) (org-element-at-point))))
 
 (defun org-roam-anki-export-buffer ()
   "Export current buffer and all subheadings as anki flashcards"
   (interactive)
-  (let ((cardlist (org-roam-anki--get-card-info (org-roam-node-at-point))))
-    (anki-editor--anki-connect-invoke-result "addNote"
-      `((note . ((deckName . "Default")
-                 (modelName . "Basic")
-                 (fields . ((Front . ,(alist-get 'topic (seq-elt cardlist 0)))
-                            (Back . ,(alist-get 'content (seq-elt cardlist 0)))))))))))
+  (org-roam-anki--export-cardlist
+   (org-roam-anki--get-cardlist (org-roam-node-at-point))))
 
 (provide 'org-roam-anki)
 
