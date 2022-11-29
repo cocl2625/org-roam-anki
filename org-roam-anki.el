@@ -152,7 +152,12 @@ it will operate on that element and all sub-elements"
 (defun org-roam-anki-export-buffer ()
   "Export current buffer and all subheadings as anki flashcards"
   (interactive)
-  (org-roam-anki--get-card-info (org-roam-node-at-point)))
+  (let ((cardlist (org-roam-anki--get-card-info (org-roam-node-at-point))))
+    (anki-editor--anki-connect-invoke-result "addNote"
+      `((note . ((deckName . "Default")
+                 (modelName . "Basic")
+                 (fields . ((Front . ,(alist-get 'topic (seq-elt cardlist 0)))
+                            (Back . ,(alist-get 'content (seq-elt cardlist 0)))))))))))
 
 (provide 'org-roam-anki)
 
