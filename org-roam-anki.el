@@ -146,7 +146,7 @@ it will operate on that element and all sub-elements"
                                 (model . ,org-roam-anki-standard-model)
                                 (taglist . ,(org-roam-anki--get-taglist content)))
                               cardlist))
-                       (t (print "Cloze cards are not yet supported")))))))
+                       (t nil))))))
       cardlist))
 
 ; TODO Make this function return different values based on success/failure
