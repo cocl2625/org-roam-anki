@@ -27,6 +27,7 @@ The goal of org-roam-anki is to allow users to take notes in org-roam as they no
 - [-] Create a working export process
   - [X] Create working standard card exports
   - [ ] Create working cloze card exports
+- [ ] Allow customizing field names
 - [X] Strip formatting marks from flashcards
 - [ ] Properly handle lists
 - [ ] Allow customizable cloze indicators
