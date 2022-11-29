@@ -28,6 +28,7 @@ The goal of org-roam-anki is to allow users to take notes in org-roam as they no
   - [X] Create working standard card exports
   - [ ] Create working cloze card exports
 - [X] Strip formatting marks from flashcards
+- [ ] Properly handle lists
 - [ ] Allow customizable cloze indicators
 - [ ] Allow exporting entire databases
 - [ ] Deprecate anki-editor dependency
@@ -45,6 +46,8 @@ The above version requirements are not necessarily strict, though they are the o
 Users should install this package using their typical emacs package management technique. It will have to be installed directly from GitHub as the package is not yet available on MELPA or any other package archives. Additionally, users can simply clone this git repository and manually load the package with ~(require 'org-roam-anki ".../org-roam-anki.el")~.
 
 * Usage
+
+NOTE: Two primary features are still currently not functional -- the ability to export cloze cards and proper handling of lists. For now, just use standard cards.
 
 Anki has two main types of notes -- standard and cloze. Standard cards function like traditional flashcards, with a term on the front and information about that term on the back. Cloze cards, on the other hand, only have one side. It shows some information with certain terms deleted, and the user is asked to recall those missing terms. Org-roam-anki allows for the creation of both types of card.
 
