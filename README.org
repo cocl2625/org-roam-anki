@@ -6,8 +6,6 @@
 #+title: Org-roam-anki
 #+author: Connor Clark
 
------
-
 #+html:<p align="center"><a href="https://www.gnu.org/software/emacs/"><img src="https://img.shields.io/static/v1?label=made for&message=emacs&color=7f5ab6"></a> <a href="https://github.com/cocl2625/org-roam-anki/pulls"><img src="https://img.shields.io/static/v1?label=contribute a&message=pr&color=248937"></a></p>
 
 #+html:<div align="center">
